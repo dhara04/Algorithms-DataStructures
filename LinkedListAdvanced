@@ -1,0 +1,200 @@
+void ReverseList(struct List*& head)
+{
+    struct List* cur,*nextest,*prev;
+    cur=head;
+    prev = NULL;
+    while(cur!=NULL )
+    {
+        nextest = cur->next;
+        cur->next = prev;
+        prev = cur;
+        cur = nextest;
+    }
+    head = prev;
+}
+
+/*Add 2 LinkedLists 
+
+You are given two linked lists representing two non-negative numbers. The digits are stored in reverse order and each of their nodes contain a single digit. Add the two numbers and return it as a linked list.
+
+Input: (2 -> 4 -> 3) + (5 -> 6 -> 4)
+Output: 7 -> 0 -> 8
+
+    342 + 465 = 807
+Make sure there are no trailing zeros in the output list
+So, 7 -> 0 -> 8 -> 0 is not a valid response even though the value is still 807.
+
+Solution Hint :
+Very much the simulation of the mathematical process of summing up the numbers. You sum the digits and maintain a carry.
+
+Gotchas : 
+1) What if one list if shorter than the other ? 1->2 + 2->3->4->5
+2) What if the answer has more digits ? 1 + 9
+*/
+
+struct List* AddList(struct List* A,struct List* B)
+{
+struct List* SumList= NULL;
+int m = length(A);
+int n = length(B);
+int d = m - n ;
+if(m < n){
+    struct List* temp = A;
+    A = B;
+    B = temp;
+    d = n - m;
+}
+int carry = 0;
+int sum = 0;
+while(B != NULL){
+
+    sum = A->val+B->val+carry; 
+    if(sum>9)   {
+        carry = 1;
+        sum -=10;
+    }
+    else    carry = 0;
+
+    SumList = Push(SumList,sum);
+    A = A->next;
+    B = B->next;
+    
+}
+   while(d > 0)
+    {
+        sum = A->val +carry;
+         if(sum>9)   {
+                carry = 1;
+                sum -=10;
+            }
+         else carry = 0;
+        SumList = Push(SumList,sum);
+        A = A->next;
+        d--;
+    }
+
+    if(carry) SumList = Push(SumList,carry);
+
+    ReverseList(SumList);
+
+return SumList;
+}
+/*Alternative good Solution for adding 2 lists */
+ ListNode *addTwoNumbers(ListNode *l1, ListNode *l2) {
+      if(!l1)
+          return l2;
+      if(!l2)
+          return l1;
+
+      int carry = (l1->val + l2->val) / 10;
+      ListNode *l3 = new ListNode((l1->val + l2->val) % 10);
+      ListNode *tail = l3;
+      l1 = l1->next;
+      l2 = l2->next;
+
+      while(l1 || l2 || carry)
+      {
+          int sum = ((l1 ? l1->val : 0) + (l2 ? l2->val : 0) + carry);
+          ListNode *t  = new ListNode(sum % 10);
+          carry = sum / 10;                                          
+
+          if(l1)
+              l1 = l1->next;
+          if(l2)
+              l2 = l2->next;
+          tail->next = t;
+          tail = t;
+      }
+
+      return l3;
+  }
+  
+/*Find Intersection of 2 linkedLists*/
+
+List* intersect( List* A, List* B )
+{
+    int m = length(A);
+    int n = length(B);
+    /* Approach 1 
+     * Iterate through each element of A & compare with every element of B 
+     * This takes O(mn) time 
+     */
+ /*   while(A != NULL){
+        struct List* head =B; 
+        while(head!=NULL){
+                  if(A->val == head->val)   return A;
+                  head=head->next;
+        }
+        A=A->next;
+    }
+    return NULL;*/
+    /* Approach 2 Time /Space Tradeoff
+     * Add element of B to a store(either BST or Hash table)- we use sets here which take lg(n) time for insertion & deletion
+     * We can just find each element of A and continue otherwise ,This takes O(nlgn) time and O(m) 
+     */
+    //set<List*> addresses;
+    //while(B!=NULL){                     // O(n)
+    //    addresses.insert(B);
+    //    B= B->next;
+    //}
+
+    //while(A!= NULL)
+    //{
+    //    if(addresses.find(A) != addresses.end()) return A; 
+    //    A= A->next;
+    //}
+    //return NULL;
+    /* Approach 3
+     * Find d = m -n 
+     * Iterate the longer list by d elements
+     * Then run another loop ,where pointer to both the lists are incremented and compare the elements,if you find a merge return
+     * else return NULL
+     */
+    int d = m-n;
+    if(m > n)
+    {
+        struct List* temp = A;
+        A= B;
+        B= temp;
+        d = m-n;
+    }
+
+    while(d>0)
+    {
+        A=A->next;
+        
+    }
+    while(A!=NULL && B != NULL){
+    if(A==B)    return A;
+    A= A->next;
+    B= B->next;
+    }
+    return NULL;
+}
+
+int main()
+{
+    int n,m;
+     cout<<"Enter number of nodes for 1st List\n";
+     cin>>m;
+     cout<<"Enter number of nodes for 2nd List\n";
+     cin>>n;
+     vector<int> A(m);
+     vector<int> B(n);
+    for(int i = 0 ; i < m ; i++)
+        cin>>A[i];
+    for(int i = 0 ; i < n ; i++)
+        cin>>B[i];
+  
+    struct List* ListA = NULL;
+    struct List* ListB = NULL;
+    ListA = InsertFront(ListA,A);
+    ListB = InsertFront(ListB,B);
+    struct List* AddedList  = NULL;
+
+    AddedList = AddList(ListA,ListB);
+    PrintList(AddedList);
+    
+    cin.get();
+    return 0;
+}
