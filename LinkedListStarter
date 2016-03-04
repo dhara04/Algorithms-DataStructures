@@ -1,0 +1,149 @@
+#include<stdlib.h>
+#include<iostream>
+#include<vector>
+
+using namespace std;
+
+struct List{
+    int val;
+    List* next;    
+};
+
+/*Print the nodes*/
+void PrintList(struct List* head)
+{
+    while(head!= NULL)
+    {
+        cout<<head->val<<"\t";
+        head = head->next;
+    }
+}
+/*Push for C++ 
+ *Allocation od memory for nodes and adjust the links 
+*/
+struct List* Push(struct List*& head, int val)
+{
+    struct List* newNode = (struct List*)malloc(sizeof(struct List));
+    newNode->val = val;
+    newNode->next = head;
+    head = newNode;
+    return head;
+}
+
+/*Push for C
+ *Allocation od memory for nodes and adjust the links 
+*/
+struct List* PushC(struct List** head, int val)
+{
+    struct List* newNode = (struct List*)malloc(sizeof(struct List));
+    newNode->val = val;
+    newNode->next = *head;
+    *head = newNode;
+    return *head;
+}
+
+/*
+Insert at Front
+*/
+struct List* InsertFront(struct List*& head, vector<int> val) {
+   for( int i =0 ; i < val.size(); i++ )
+   {
+       head = Push(head,val[i]);
+   }
+   return head;
+}
+
+/*
+Insert at Rear(Tail) Using Push 
+*/
+struct List* InsertRear1(struct List*& head, vector<int> val)  {
+   struct List* tail = head;
+   for( int i =0 ; i < val.size(); i++ )
+   {
+       if(head == NULL)
+       {
+           head = Push(head,val[i]);    //This is the reason head needs to be passed as a reference so that we can assign to it ,
+                                        //else local changes to head won't be effective in main loop
+       }
+       else
+       {
+           while(tail->next != NULL)
+           {
+            
+               tail = tail->next;
+           }
+           tail->next = Push(tail->next,val[i]);//Make sure to assign the return value to tail->next rather than head , else 
+                                                //head will be changed to 
+
+       }
+
+       tail = head; //We need to reset tail to the beginning of the list everytime so that tail = tail->next can happen 
+   }
+    return head;
+}
+
+/*
+Insert at Rear(Tail) Without Push 
+*/
+struct List* InsertRear2(struct List*& head, vector<int> val)  {
+   struct List* tail = head;
+   for( int i =0 ; i < val.size(); i++ )
+   {
+        struct List* newNode = (struct List*)malloc(sizeof(struct List));
+        newNode->val = val[i];
+        newNode->next = NULL;
+
+       if(head == NULL)
+       {
+            head = newNode;
+       }
+       else
+       { 
+           while(tail->next != NULL)
+           {
+            
+               tail = tail->next;
+           }
+            tail->next = newNode;
+
+       }
+
+       tail = head; //We need to reset tail to the beginning of the list everytime so that tail = tail->next can happen 
+   }
+    return head;
+}
+
+/*
+Insert at Rear(Tail) Using Dummy Node
+*/
+struct List* InsertRear3(struct List*& head, vector<int> val)  {
+    struct List dummy;      //there is wastage of space but there is no special handling for when List is empty
+    dummy.next = head;
+    for( int i =0 ; i < val.size(); i++ )
+    {
+        struct List* tail = &dummy;         //With every new value to be added we need to update tail to the first node
+        while(tail->next != NULL)
+        {
+            tail = tail->next;
+        }
+   
+        struct List* newNode = (struct List*)malloc(sizeof(struct List));
+        newNode->val = val[i];
+        newNode->next = NULL;
+        tail->next = newNode;
+
+    }
+    return dummy.next;      // The real result list is now in dummy.next
+                            // dummy.next == {1, 2, 3, 4, 5};
+}
+/*Length of LinkedList  */
+
+int length(struct List* node){
+    int count = 0 ;
+    while(node != NULL)
+    {
+        count++;
+        node = node->next;
+    }
+    return count;
+}
