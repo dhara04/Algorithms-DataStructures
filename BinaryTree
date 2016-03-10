@@ -31,6 +31,7 @@ struct node* newNode(int data)
     newnode->right = NULL;
     return newnode;
 }
+
 void InsertBST(struct node*& root, int data)
 {
     if(root == NULL)    root = newNode(data);
@@ -77,6 +78,7 @@ int height(node * root)
        else return rheight+1;
     }
 }
+
 //Rather than writing code for queue from scratch , we can use C++ STL queue as well to make things easier
 struct node** CreateQueue(int* front, int* rear)
 {
@@ -133,6 +135,33 @@ void LevelOrderTraversal(node* root)
             enqueue(queue,temp->right,&front,&rear);
         temp = dequeue(queue,&front,&rear);
     }
+}
+
+/*
+#include <queue>
+#include <iostream>
+
+struct node
+{
+    int data;
+    node* left;
+    node* right;
+}*/
+//This one uses STL C++ queue class 
+void LevelOrder(node * root)
+{
+    queue<node*> q;
+    if(root != NULL)    q.push(root);
+    while(!q.empty())
+    {
+        node* temp = q.front();
+        q.pop();
+        cout<<temp->data<<" ";
+        if(temp->left)  q.push(temp->left);
+        if(temp->right) q.push(temp->right);
+        
+    }
+  
 }
 
 bool hasPathSum(node* root, int sum)
