@@ -1,0 +1,170 @@
+#include<iostream>
+#include<stdio.h>
+#include<vector>
+
+#define MAX_SIZE 50
+
+using namespace std;
+/*Taking 1 2 3 4 5 6 as Input 
+            
+            4
+        3        5 
+          2      6
+        1
+      Postorder :    123654
+               
+
+*/
+
+struct node
+{
+    int data;
+    struct node* left;
+    struct node* right;
+};
+
+struct node* newNode(int data)
+{
+    struct node* newnode = new(struct node);
+    newnode->data = data;
+    newnode->left = NULL;
+    newnode->right = NULL;
+    return newnode;
+}
+void InsertBST(struct node*& root, int data)
+{
+    if(root == NULL)    root = newNode(data);
+    else
+    {
+        if(data <= root->data) 
+            InsertBST(root->left,data);
+        else
+            InsertBST(root->right,data);
+    }
+}
+
+void PrintTree(struct node* cur)
+{
+    if(cur == NULL)
+        return;
+    else
+    {
+        PrintTree(cur->left);
+        cout<<cur->data;
+        PrintTree(cur->right);
+    }
+}
+
+void PrintPostorderTree(struct node* cur)
+{
+    if(cur == NULL)
+        return;
+    else
+    {
+        PrintTree(cur->left);
+        PrintTree(cur->right);
+        cout<<cur->data;
+    }
+}
+
+int height(node * root)
+{
+  if(root == NULL)  return 0;
+   else{
+        int lheight = height(root->left);
+        int rheight = height(root->right);
+       if(lheight>rheight) return lheight+1;
+       else return rheight+1;
+    }
+}
+//Rather than writing code for queue from scratch , we can use C++ STL queue as well to make things easier
+struct node** CreateQueue(int* front, int* rear)
+{
+    struct node** queue = (struct node**)malloc(sizeof(struct node*)*MAX_SIZE);
+    *front = -1;
+    *rear = -1;
+
+    return queue; 
+}
+
+bool IsQueueEmpty(int *front, int*rear)
+{
+    return(*front == -1 && *rear == -1);
+    
+}
+
+bool IsQueueFull(int *front, int*rear)
+{
+    return((*rear+1)%MAX_SIZE==*front?true:false);
+    
+}
+void enqueue(struct node** queue,struct node* cur, int * front,int * rear)
+{ 
+   /* if(IsqueueFull()) 
+    {
+        cout<<"Queue is full\n";
+        return;
+    }*/
+    if(IsQueueEmpty(front,rear))  {*front = 0;*rear = 0;}
+    queue[*rear] = cur;
+    (*rear)++;   
+}
+
+struct node* dequeue(struct node** queue,int* front,int *rear)
+{
+    (*front)++;
+    if(*front>*rear)    return NULL;
+
+    return queue[*front-1];
+}
+void LevelOrderTraversal(node* root)
+{
+    //We use BFS and a queue 
+    int front,rear;
+    struct node** queue = CreateQueue(&front,&rear);
+
+    struct node* temp = root;
+    while(temp)
+    {
+        cout<<temp->data<<" ";
+        if(temp->left)
+            enqueue(queue,temp->left,&front,&rear);
+        if(temp->right)
+            enqueue(queue,temp->right,&front,&rear);
+        temp = dequeue(queue,&front,&rear);
+    }
+}
+
+bool hasPathSum(node* root, int sum)
+{
+    if(root == NULL)    return(sum == 0);
+    int subsum = sum - root->data;
+    return(hasPathSum(root->left,subsum)||hasPathSum(root->right,subsum));
+}
+
+int main()
+{
+//int n;
+//cin>>n;
+//vector<int> v(n);
+struct node* root = NULL;
+
+//for( int i = 0 ; i<n ; i++ )
+//{
+//    cin>>v[i];
+//    InsertBST(root,v[i]);
+//}
+    root = newNode(5);
+    root->left        = newNode(1000);
+    root->right       = newNode(200);
+  /*  root->left->left  = newNode(4);
+    root->left->right = newNode(5);*/
+cout<<"\nhere are the nodes\n";
+PrintTree(root);
+//PrintPostorderTree(root);
+cout<<"\nhere is the level order traversal\n";
+//LevelOrderTraversal(root);
+cout<<hasPathSum(root,1000);
+cin.get();
+
+}
