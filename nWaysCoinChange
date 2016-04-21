@@ -1,0 +1,119 @@
+/*
+How many different ways can you make change for an amount, given a list of coins? In this problem, your code will need to efficiently compute the answer.
+
+Reference Video : https://www.youtube.com/watch?v=_fgjrs570YE&list=PLrmLmBdmIlpsHaNTPP_jHHDx_os9ItYXr&index=10
+
+if(j>=coins(i))
+    T[i][j] = T[i-1,j]+T[i, j-coins(i)]
+else
+    T[i][j] = T[i-1][j]
+Explanation Missing in Video:
+The intuition behind it has not been well explained in the video. 
+Suppose T[2][5] = 5. It is calculated by T[1][5] + T [2][2]. It is saying that there are 5 different ways to have total value of 5 by these 3 different coins. 
+
+The idea from the first part is that assume we don't have the current coin available (3), then the number of ways we can have from the other 2s are 3 (T[1][5] = 3, i.e.: 11111, 2111,221). 
+
+The second part is to deduct the total from the current coin's value (here 3) and add the remaining values's way to the total number of ways. You know why? Because what it means is how many ways we can find for "total - coin[i]", here 5 - 3 = 2 by all of the coins. It means, 2 can be formed by 11 or 2 which later we can add another 3 for the deducted valued to have the total value: 311, 32.
+ 
+I hope that helps you understand how the problem is broken down to two parts.﻿
+
+
+Task
+
+Write a program that, given
+
+The amount NN to make change for and the number of types MM of infinitely available coins
+A list of MM coins - C={C1,C2,C3,..,CM}C={C1,C2,C3,..,CM}
+Prints out how many different ways you can make change from the coins to STDOUT.
+
+The problem can be formally stated:
+
+Given a value NN, if we want to make change for NN cents, and we have infinite supply of each of C={C1,C2,…,CM}C={C1,C2,…,CM} valued coins, how many ways can we make the change? The order of coins doesn’t matter.
+
+Constraints
+
+1≤Ci≤501≤Ci≤50
+1≤N≤2501≤N≤250
+1≤M≤501≤M≤50
+The list of coins will contain distinct integers.
+Solving the overlapping subproblems using dynamic programming
+
+You can solve this problem recursively, but not all the tests will pass unless you optimise your solution to eliminate the overlapping subproblems using a dynamic programming solution
+
+Or more specifically;
+
+If you can think of a way to store the checked solutions, then this store can be used to avoid checking the same solution again and again.
+Input Format
+
+First line will contain 2 integer N and M respectively. 
+Second line contain M integer that represent list of distinct coins that are available in infinite amount.
+
+Output Format
+
+One integer which is the number of ways in which we can get a sum of N from the given infinite supply of M types of coins.
+
+Sample Input
+
+4 3
+1 2 3 
+Sample Output
+
+4
+Sample Input #02
+
+10 4
+2 5 3 6
+Sample Output #02
+
+5
+Explanation
+
+Example 1: For N=4N=4 and C={1,2,3}C={1,2,3} there are four solutions: {1,1,1,1},{1,1,2},{2,2},{1,3}{1,1,1,1},{1,1,2},{2,2},{1,3}
+
+Example 2: For N=10N=10 and C={2,5,3,6}C={2,5,3,6} there are five solutions: {2,2,2,2,2},{2,2,3,3},{2,2,6},{2,3,5},{5,5}{2,2,2,2,2},{2,2,3,3},{2,2,6},{2,3,5},{5,5}.
+*/
+#include <cmath>
+#include <cstdio>
+#include <vector>
+#include <iostream>
+#include <algorithm>
+using namespace std;
+
+
+int main() {
+   unsigned long long n,m;
+   
+    cin>>n>>m;
+    vector<vector<unsigned long long> > T(m+1,vector<unsigned long long>(n+1));
+    vector<unsigned long long>coins(m+1);
+
+    unsigned long long temp;
+    coins[0]=0;
+    for(unsigned long long i = 1 ; i <= m ; i++ )
+    {
+        cin>>temp;
+        coins[i] = temp;
+    }
+
+    for(unsigned long long i= 0; i <m+1 ; i++)
+        T[i][0] = 1;
+
+    for(unsigned long long i = 1 ; i < m+1 ; i++ )
+    {
+        
+        for(unsigned long long j = 1 ; j  <=  n ;  j++)
+        {
+         
+            if(j>=coins[i])
+            {
+                T[i][j] = T[i-1][j] + T[i][j-coins[i]];
+            }
+            else
+            {
+                T[i][j] = T[i-1][j];
+            }
+        }
+    }
+    cout<<T[m][n];
+
+}
