@@ -1,0 +1,48 @@
+#include <cmath>
+#include <cstdio>
+#include <vector>
+#include <iostream>
+#include <algorithm>
+using namespace std;
+
+/*Find min. no. of coins needed to make n cents 
+
+Reference Video for Logic: https://www.youtube.com/watch?v=rdI94aW6IWw
+
+c(p) # min no. of coins need to make p cents
+s(p) #last denomination needed to make p cents
+
+
+recurrence min(c[p - di],1) where di ranges from d0 to <=n
+*/
+int main() {
+    /* Enter your code here. Read input from STDIN. Print output to STDOUT */   
+    int n,m;
+    cin>>n>>m;
+    vector<int> c(n+1,10000000000L);
+    vector<int> d(m);
+    
+    int temp;
+    for(int i = 0 ; i < m ; i++)
+    {
+        cin>>temp;
+        d[i] = temp;
+    }
+        
+    for(int i = 0 ; i <= n ; i++)
+    {
+        if(i == 0) 
+        {
+            c[i] = 0;
+            continue;
+        }
+        for( int j = 0 ; j < m && d[j]<=i; j++ )
+        {
+            c[i] = min(c[i],c[i-d[j]]+1);       
+        }
+        
+    }
+    cin.get();
+    cout<< "Min. no of coins needed"<<c[n]<<"\n";
+    cin.get();
+}
