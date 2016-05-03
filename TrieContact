@@ -1,0 +1,89 @@
+//We are going to make our own contacts application. You are given the number of operations to perform, N. In any contacts application, two basic operations are add and find. The input will be one of the following:
+//
+//add name
+//find partial
+//For the find operation, you will have to print the number of contacts who have a name starting with that partial name.
+//
+//Input Format
+//
+//The first line contains the integer N, the number of operations to be performed. 
+//The next N lines contains one of the two operations defined above.
+//
+//Constraints
+//
+//1≤N≤10^5 
+//1≤Length(name)≤21 
+//1≤Length(partial)≤21
+//
+//The entire input consists of lowercase characters only.
+//
+//Output Format
+//
+//For each operation of type find partial, print the number of contacts starting with the string partial.
+//
+//Sample Input
+//
+//4
+//add hack
+//add hackerrank
+//find hac
+//find hak
+//Sample Output
+//
+//2
+//0
+//Explanation
+//
+//The names hack and hackerrank both start with the string hac. We have no name starting with the string hak.
+#include <iostream>
+//#include <stdlib.h>
+#include <string>
+#include <map>
+using namespace std;
+
+struct trieNode{
+    map<char,trieNode*> mapchar;
+    bool isWord;
+};
+typedef trieNode* TrieNode; 
+
+
+void add(string str,TrieNode node)
+{
+    for(int i = 0 ; i < str.length() ; i++ )
+    {
+        if (node->mapchar['a'])
+        {
+        }
+        else
+        {
+            TrieNode tnode = new trieNode;
+            tnode->mapchar[str[i]]=
+    }
+}
+
+int find(string str)
+{
+}
+
+int main()
+{
+    int n,result;
+    string temp;
+    cin>>n;
+    for(int i = 0 ;i < n ; i++ )
+    {
+        cin.ignore();
+        getline(cin,temp);
+        if(temp[0] == 'a')
+        {
+            add(temp.substr(4));
+        }
+        else
+        {
+            cout<<find(temp.substr(5));
+        }
+        
+    }
+    return 0;
+}
