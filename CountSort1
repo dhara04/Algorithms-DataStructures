@@ -1,0 +1,32 @@
+#include<cmath>
+#include<cstdio>
+#include<vector>
+#include<iostream>
+#include<algorithm>
+using namespace std;
+
+
+int main() {
+    /* Enter your code here. Read input from STDIN. Print output to STDOUT */   
+    int n;
+    cin>>n;
+    vector<int> ar(n),count(5);
+    for( int i = 0; i < n; i++ )
+    {
+        cout<<"Enter Integer "<<i; 
+        cin>>ar[i];
+        count[ar[i]]+=1;        
+    }
+
+    for( int i = 0 ; i < 5; i++ )
+    {
+        int tcount = count[i];
+        int j  = 0;
+        while(tcount>j)
+        {
+            cout<<i<<" ";
+            j++;
+        }
+    }
+    return 0;
+}
