@@ -1,0 +1,57 @@
+#include<cmath>
+#include <cstdlib>
+#include<cstdio>
+#include<vector>
+#include<iostream>
+#include<algorithm>
+#include<string>
+using namespace std;
+/*It's important to have the following data structure as we need the string as well as integer sorted.
+  In the ealier Count Sort , the only requirement was to print the integers in sorted manner.Here we have string with integers 
+*/
+struct data{
+    int ar;
+    string str;
+};
+
+int main() {
+    /* Enter your code here. Read input from STDIN. Print output to STDOUT */   
+    int n;
+    cin>>n;
+    vector<struct data> dar(n),output(n);
+    vector<int>count(100),helper(100);
+    for( int i = 0; i < n; i++ )
+    {
+        cin>>dar[i].ar;
+        cin>>dar[i].str;
+        count[dar[i].ar]=count[dar[i].ar]+1;
+    }
+    //here, helper is redundant,we could have stores the positions in coutn directly
+    helper[0] = count[0];
+    for( int i = 1 ; i < 100; i++ )
+    {
+        //Helper Array
+        helper[i]=count[i];
+        helper[i]+=helper[i-1];
+    }
+    for(int i = n-1; i>=0; i--)//We start backwards because it's a stable sort(the output array should be in same order as input)
+    {
+      /*Instead of helper containing positions where each number will start, it's one after each no. will end
+      i.e : Say n =7 &(no. are between 0 & 4) , I/P : 0 aa 1 bb 2 cc 3 dd 4 ee 0 ff 1 gg
+      count 2 2 1 1 1
+            0 1 2 3 4   /*No. range from 0 to 4*/
+      helper 2 4 5 6 7 
+      */
+        output[helper[dar[i].ar]-1].ar =dar[i].ar; 
+        if(i >= n/2)
+            output[helper[dar[i].ar]-1].str =dar[i].str;
+        else
+            output[helper[dar[i].ar]-1].str ="-";
+        helper[dar[i].ar]--;
+    }
+    for(int i = 0; i <n ; i++)
+    {
+        cout<<output[i].str<<" ";
+    }
+    return 0;
+}
