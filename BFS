@@ -1,0 +1,80 @@
+/*
+In BFS for graphs, we have boolean array visited, to make sure, we don't visit the same vertices
+again and again , leading to a non-terminating process
+
+http://www.geeksforgeeks.org/breadth-first-traversal-for-a-graph/
+
+
+*/
+
+#include <iostream>
+#include <list>
+
+using namespace std;
+
+class Graph
+{
+	int N;
+	list<int>* adj;
+
+public:
+	Graph(int N);
+	void addEdge(int v, int w);
+	void BFS(int s);
+};
+
+Graph::Graph(int n)
+{
+	this->N = n;
+	adj = new list<int>[N];
+}
+
+void Graph::addEdge(int v, int w) {
+	adj[v].push_back(w);
+}
+
+void Graph::BFS(int s) {
+	bool* visited = new bool[N];
+	for (int i = 0; i < N; i++)
+		visited[i] = false;
+
+	list<int> queue;
+
+	visited[s] = true;
+	queue.push_back(s);
+
+	list<int>::iterator i;
+
+	while (!queue.empty()) {
+		int q = queue.front();
+		cout << q << " ";
+		queue.pop_front();
+		for (i = adj[q].begin(); i != adj[q].end(); ++i)
+		{
+			if (!visited[*i]) {
+				visited[*i] = true;
+				queue.push_back(*i);
+			}
+		}
+	}
+
+}
+
+int main()
+{
+	// Create a graph given in the above diagram
+	Graph g(4);
+	g.addEdge(0, 1);
+	g.addEdge(0, 2);
+	g.addEdge(1, 2);
+	g.addEdge(2, 0);
+	g.addEdge(2, 3);
+	g.addEdge(3, 3);
+
+	cout << "Following is Breadth First Traversal "
+		<< "(starting from vertex 2) \n";
+	g.BFS(2);
+	cin.get();
+
+	return 0;
+}
