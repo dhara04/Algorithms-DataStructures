@@ -1,0 +1,91 @@
+/*
+Given a 2d matrix with 0's & 1's , find no. of islands(1's combined together form an island), 
+and the max no. of land bodies across all islands 
+
+Example:
+                        {1, 1, 0, 0, 0},
+                        {0, 1, 0, 0, 1},
+                        {1, 0, 0, 1, 1},
+                        {0, 0, 0, 0, 0},
+                        {1, 0, 1, 0, 1}
+                       
+          This one has 3 CC's or islands . And max no. of land bodies is 3.
+          
+How to Solve?
+
+Use the algo to compute connected components(CC) in an undirected graph.(DFS/BFS/Union Find)
+all 1's that touch another 1 on it's 8 neighbours, help form a connected component.
+The no. of DFS calls is the no. of connected components
+
+We use a boolean matrix which keeps record of whether a node is visited
+
+Inspiration: http://www.geeksforgeeks.org/find-number-of-islands/
+*/
+
+
+#include<stdio.h>;
+#include<string.h>
+#include<iostream>
+
+#define M 5
+#define N 5
+
+bool issafe(int A[][N], int row, int col, bool visited[][N]) {
+	return row >= 0 && row<M&& col >= 0 && col<M
+		&& A[row][col] && !visited[row][col];
+}
+
+void DFS(int A[][M], int row, int col, bool visited[][N], int& landcount)
+{
+	  //This gives us indices for the 8 neighbours, in zig-zag 
+  //(left to right and then left to right for next row & column)
+  
+	static int rowno[] = { -1, -1, -1, 0, 0, 1, 1, 1 };
+  static int colno[] = { -1, 0, 1, -1, 1, -1, 0, 1 };
+
+	visited[row][col] = true;
+	for (int k = 0; k<8; k++) {
+		if (issafe(A, row + rowno[k], col + colno[k], visited))
+		{  
+			landcount+=1;
+			DFS(A, row + rowno[k], col + colno[k], visited, landcount);
+		}
+	}
+
+}
+
+int findIslands(int A[][N], int& max)
+{
+	//Your code here 
+	bool visited[M][N];
+	memset(visited, 0, sizeof(visited));
+	int count = 0;
+	int landcount = 0;
+
+	for (int i = 0; i<M; i++) {
+		for (int j = 0; j< N; j++) {
+			if (A[i][j] && !visited[i][j]) {
+				DFS(A, i, j, visited, landcount);
+				count++;
+				if (landcount>max) max = landcount;//With every call to dfS, no. of land bodies in it are computed 
+				landcount = 0;  //we reset it to calculate land masses in another island
+			}
+			
+		}
+	}
+	return count;
+}
+
+int main() {
+	int A[][N] = { { 1, 1, 0, 0, 0 },
+	{ 0, 1, 0, 0, 1 },
+	{ 1, 0, 0, 1, 1 },
+	{ 0, 0, 0, 0, 0 },
+	{ 1, 0, 1, 0, 1 }
+	};
+	int landcount = 0;
+	std::cout<<"No. of Islands is " <<findIslands(A, landcount)<<"\n";
+	std::cout << "Max no. of land bodies is " << landcount;
+	std::cin.get();
+	return 0;
+}
