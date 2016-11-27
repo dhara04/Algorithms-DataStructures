@@ -1,0 +1,121 @@
+/**
+* 
+*
+* Video link - https://youtu.be/ID00PMy0-vE
+*
+* Disjoint sets using path compression and union by rank
+* Supports 3 operations
+* 1) makeSet
+* 2) unionset
+* 3) findSet
+*
+* For m operations and total n elements time complexity is O(m*f(n)) where f(n) is
+* very slowly growing function. For most cases f(n) <= 4 so effectively
+* total time will be O(m). Proof in Coreman book.
+*/
+
+#include<iostream>
+#include<map>
+using namespace std;
+
+class Node {
+
+public:
+	int data;
+	int rank;
+	Node* parent;
+	Node() {
+
+	}
+	Node(int i) {
+		data = i;
+		rank = 0;
+		this->parent = this;
+	}
+};
+
+class DisjointSet {
+	
+public:
+	
+	void makeset(int i) {
+		Node* newnode = new Node(i);
+		nodemap[i] = *newnode;
+	}
+	bool unionset(int a, int b) {
+		Node a1 = nodemap[a];
+		Node b1 = nodemap[b];
+
+
+		Node parent1 = findset(a1);
+		Node parent2 = findset(b1);
+
+		//if they are part of same set do nothing
+		if (parent1.data == parent2.data) {
+			return false;
+		}
+
+		//else whoever's rank is higher becomes parent of otherBS
+		if (parent2.rank >= parent1.rank) {
+			//increment rank only if both sets have same rank
+			parent2.rank = (parent2.rank == parent1.rank) ? parent2.rank + 1 : parent2.rank;
+			*parent1.parent = parent2;
+		}
+		else {
+			*parent2.parent = parent1;
+		}
+		return true;
+	}
+
+
+	int findset(int data) {
+		Node temp = findset(nodemap[data]);
+		return temp.data;
+	}
+	
+private:
+
+	map<int, Node> nodemap;
+	Node findset(Node data);
+};
+
+/**
+* Find the representative recursively and does path
+* compression as well.
+*/
+Node DisjointSet::findset(Node dd) {
+	Node* parent = dd.parent;
+	if (parent->data == dd.data)
+		return *parent;
+	*dd.parent = findset(*dd.parent); //this part takes care of compression
+	return *dd.parent;
+}
+
+int main() {
+	DisjointSet* ds = new DisjointSet();
+	ds->makeset(1);
+	ds->makeset(2);
+	ds->makeset(3);
+	ds->makeset(4);
+	ds->makeset(5);
+	ds->makeset(6);
+	ds->makeset(7);
+
+	ds->unionset(1, 2);
+	ds->unionset(2, 3);
+	ds->unionset(4, 5);
+	ds->unionset(6, 7);
+	ds->unionset(5, 6);
+	ds->unionset(3, 7);
+
+	cout<<ds->findset(1);
+	cout<<ds->findset(2);
+	cout<<ds->findset(3);
+	cout<<ds->findset(4);
+	cout<<ds->findset(5);
+	cout<<ds->findset(6);
+	cout<<ds->findset(7);
+
+	cin.get();
+	return 0;
+}
