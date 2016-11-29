@@ -1,4 +1,7 @@
 /*
+
+Shortest path from source to all vertices
+
 There is an implementation that uses O(n^2) complexity usign Adjacency Matrix 
 http://www.geeksforgeeks.org/greedy-algorithms-set-6-dijkstras-shortest-path-algorithm/
 
