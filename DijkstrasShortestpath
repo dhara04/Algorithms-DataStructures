@@ -1,0 +1,12 @@
+/*
+There is an implementation that uses O(n^2) complexity usign Adjacency Matrix 
+http://www.geeksforgeeks.org/greedy-algorithms-set-6-dijkstras-shortest-path-algorithm/
+
+Both these implementations have O(ElogV) complexity
+
+Using priorty Queue(Min Heap)
+http://www.geeksforgeeks.org/dijkstras-shortest-path-algorithm-using-priority_queue-stl/
+
+Using set 
+http://www.geeksforgeeks.org/dijkstras-shortest-path-algorithm-using-set-in-stl/
+*/
