@@ -1,0 +1,54 @@
+#include <iostream>
+#include <bits/stdc++.h>
+using namespace std;
+long long getVal(char* str,int size,int q)
+{
+    long long val=0;
+    for(int i=0; i<size; i++)
+        val+=abs(str[i]-'A')*pow(q,i);
+    return val;
+}
+void search(char *pat,char * txt, int q)
+{
+    int m=strlen(pat);
+    int n=strlen(txt);
+    long long p=getVal(pat,m,q);
+    long long t=getVal(txt,m,q);
+    for(int i=1; i<=n-m+1; i++)
+    {
+        if(p==t)
+        {
+            int j;
+            for(j=0; j<m; j++)
+            {
+                if(txt[i+j-1]!=pat[j])
+                    break;
+            }
+            if(j==m)
+                cout<<"Pattern found @ "<<i-1<<endl;
+        }
+        if(i<n-m+1)//we keep generating rolling hash because pat can exist multiple times in text
+        {
+            long long newVal=t-abs(txt[i-1]-'A');
+            newVal/=q;
+            newVal+=abs(txt[i+m-1]-'A')*pow(q,m-1);
+            t=newVal;
+        }
+    }
+}
+int main()
+{
+    char *txt = "GEEKSFORGEEKS";
+    char *pat = "GEEK";
+    int q = 2; // A prime number
+    search(pat, txt, q);
+    cout<<"case 1 \n";
+    txt = "ABABDABACDABABCABAB";
+    pat = "ABABCABAB";
+    search(pat, txt,q);
+    txt =  "AABAACAADAABAAABAA";
+    pat= "AABA";
+    cout<<"case 2 \n";
+    search(pat,txt,q);
+    return 0;
+}
