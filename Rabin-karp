@@ -1,3 +1,23 @@
+/*
+Understood from Tushar Roys video: https://www.youtube.com/watch?v=H4VrKHVG5qI
+Rabin karp is a O(m+n) algo for pattern searching in best case. Worst case is still O(mn) which happens when coincidentally all hashes are same, even though the string isn't.
+We use Rolling Hashing here.
+
+We calculate the hash of a string by:
+Assumptions: 
+
+For ex : 'abc' = valueof(a)+valueof(b)*(p^0)+valueof(c)*(p^1)
+
+Say String is : abcdef
+next hash to be calculated is for bcd, we will use the hash of abc to generate this new one
+x = hash(abc)-valueof(a) //remove character that's going
+x= x%primeno
+x = x+ valueof(d)*prime^(m-1)
+hash(bcd) = x
+
+when hash matches , compare the substring of text of size m , with pat.
+*/
+
 #include <iostream>
 #include <bits/stdc++.h>
 using namespace std;
